@@ -1,48 +1,19 @@
-# This is a simple Semaphore configuration file
-# For more information about Semaphore configuration visit:
-# https://docs.semaphoreci.com/reference/pipeline-yaml-reference/
-
-version: v1.0  # Semaphore configuration version
-name: "🎯 Simple CI Pipeline"  # Pipeline display name
-
-# Define the machine type and OS image
+version: v1.0
+name: Build and Push Docker Image
 agent:
   machine:
-    type: f1-standard-2
-    os_image: ubuntu2404
-
-# Configure when to stop the pipeline early
-fail_fast:
-  stop:
-    when: branch != 'main'  # Stop all blocks if a job fails on non-main branches
-auto_cancel:
-  running:
-    when: branch != 'main'  # Cancel running pipelines on non-main branches
-  queued:
-    when: branch = 'main'   # Cancel queued pipelines on main branch
-
-# Pipeline blocks represent groups of jobs that can run in parallel
+    type: s1-ubuntu
+    os_image: ''
 blocks:
-  # Block for testing
-  - name: "🧪 Test"
-    dependencies: []
+  - name: Build and Push
     task:
+      secrets:
+        - name: dockerhub-credentials
       jobs:
-        - name: "🟢 Run Tests"
+        - name: Docker build and push
           commands:
-            - echo "Checking out code..."
-            - echo "Installing dependencies..."
-            - echo "Running test suite..."
-            - echo "Tests completed successfully!"
-
-  # Block for deployment
-  - name: "🚀 Deploy"
-    dependencies: ["🧪 Test"]  # Only deploy if tests pass
-    task:
-      jobs:
-        - name: "📦 Deploy to Production"
-          commands:
-            - echo "Building application..."
-            - echo "Running security checks..."
-            - echo "Deploying to production..."
-            - echo "Deployment completed successfully!"
+            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            - 'docker build -t $DOCKER_USERNAME/your-image-name:$SEMAPHORE_GIT_SHA 8-pipeline/'
+            - 'docker tag $DOCKER_USERNAME/your-image-name:$SEMAPHORE_GIT_SHA $DOCKER_USERNAME/your-image-name:latest'
+            - 'docker push $DOCKER_USERNAME/your-image-name:$SEMAPHORE_GIT_SHA'
+            - 'docker push $DOCKER_USERNAME/your-image-name:latest'

@@ -13,7 +13,7 @@ blocks:
         - name: Docker build and push
           commands:
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            - 'docker build -t $DOCKER_USERNAME/your-image-name:$SEMAPHORE_GIT_SHA 8-pipeline/'
-            - 'docker tag $DOCKER_USERNAME/your-image-name:$SEMAPHORE_GIT_SHA $DOCKER_USERNAME/your-image-name:latest'
-            - 'docker push $DOCKER_USERNAME/your-image-name:$SEMAPHORE_GIT_SHA'
-            - 'docker push $DOCKER_USERNAME/your-image-name:latest'
+            - 'docker build -t $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA 8-pipeline/'
+            - 'docker tag $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA $DOCKER_USERNAME/myapp:latest'
+            - 'docker push $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA'
+            - 'docker push $DOCKER_USERNAME/myapp:latest'

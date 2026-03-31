@@ -2,13 +2,13 @@ version: v1.0
 name: Build and Push Docker Image
 agent:
   machine:
-    type: s1-ubuntu
-    os_image: ''
+    type: f1-standard-2
+    os_image: ubuntu2404
 blocks:
   - name: Build and Push
     task:
       secrets:
-        - name: dockerhub-credentials
+        - name: DOCKER_LOGIN
       jobs:
         - name: Docker build and push
           commands:

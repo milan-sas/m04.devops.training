@@ -1,0 +1,27 @@
+version: v1.0
+name: Build and Push Docker Image
+agent:
+  machine:
+    type: s1-ubuntu     # as specified in the README
+
+blocks:
+  - name: Build and Push
+    task:
+      secrets:
+        - name: dockerhub-credentials   # imports your secret
+
+      jobs:
+        - name: Docker build and push
+          commands:
+            # Log in to Docker Hub
+            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+            # Build the image, tagged with the git SHA for uniqueness
+            - docker build -t $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA 8-pipeline/
+
+            # Also tag as latest
+            - docker tag $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA $DOCKER_USERNAME/myapp:latest
+
+            # Push both tags
+            - docker push $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA
+            - docker push $DOCKER_USERNAME/myapp:latest

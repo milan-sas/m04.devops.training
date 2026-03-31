@@ -12,6 +12,7 @@ blocks:
       jobs:
         - name: Docker build and push
           commands:
+            - checkout
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             - 'docker build -t $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA 8-pipeline/'
             - 'docker tag $DOCKER_USERNAME/myapp:$SEMAPHORE_GIT_SHA $DOCKER_USERNAME/myapp:latest'

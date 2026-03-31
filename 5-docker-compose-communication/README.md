@@ -34,9 +34,11 @@ Docker Compose creates a default network for all services. Each service can reac
    docker network inspect 5-docker-compose-communication_backend
    ```
 
-6. **Verify DNS resolution** - the service name `redis` resolves to the Redis container IP:
+6. **Verify DNS resolution** - the service name `redis` resolves to the Redis container IP (python image does not have ping, so we workaround using Bash)
    ```shell
-   docker compose exec web nslookup redis
+   docker compose exec web bash
+   exec 3<>/dev/tcp/redis/6379 && echo -e "PING\r\n" >&3 && head -c 7 <&3
+   # you should get a message: +PONG
    ```
 
 7. **Try a connection from Redis to web** (this will fail because Redis is only on `backend` network):

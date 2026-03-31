@@ -11,5 +11,6 @@ Each folder contains an exercise. Do them in the following order:
 - `3-docker-cli`
 - `4-docker-compose`
 - `5-docker-compose-communication`
-- `6-docker-compose-volumes`
-- `7-pipeline`
+- `6-docker-push`
+- `7-docker-compose-volumes`
+- `8-pipeline`
